@@ -21,7 +21,7 @@ dados_2023['Ano'] = "2023"
 dados = pd.concat([dados_2020, dados_2021, dados_2022, dados_2023])
 
 # Título em azul marinho
-st.markdown("<h1 style='color: #002060;'>Movimentação Portuária dos Portos Brasileiros (2020-2023)</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='color: #002060;'>Movimentação Portuária dos Portos e Terminais Brasileiros (2020-2023)</h1>", unsafe_allow_html=True)
 
 # Interface de seleção de porto
 porto_escolhido = st.selectbox("Selecione o Porto ou Terminal", sorted(dados['porto'].unique()))
