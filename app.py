@@ -47,12 +47,12 @@ if not dados_porto.empty:
     dados_anos['carga_total'] = dados_anos['carga_total'].astype(float)
 
     # Formatar os números para o padrão brasileiro
-    dados_anos['carga_porto_formatada'] = dados_anos['carga_porto'].map(lambda x: f"{x:,.2f}".replace(",", "X").replace(".", ",").replace("X", "."))
-    dados_anos['carga_total_formatada'] = dados_anos['carga_total'].map(lambda x: f"{x:,.2f}".replace(",", "X").replace(".", ",").replace("X", "."))
+    dados_anos['carga_porto_movimentada'] = dados_anos['carga_porto'].map(lambda x: f"{x:,.2f}".replace(",", "X").replace(".", ",").replace("X", "."))
+    dados_anos['carga_total_movimentada'] = dados_anos['carga_total'].map(lambda x: f"{x:,.2f}".replace(",", "X").replace(".", ",").replace("X", "."))
     dados_anos['percentual'] = dados_anos['percentual'].map(lambda x: f"{x:.2f}".replace(".", ",")) + "%"
 
     # Exibir DataFrame formatado
-    st.dataframe(dados_anos[['Ano', 'carga_porto_formatada', 'carga_total_formatada', 'percentual']], use_container_width=True)
+    st.dataframe(dados_anos[['Ano', 'carga_porto_movimentada', 'carga_total_movimentada', 'percentual']], use_container_width=True)
 
     # **Criar gráfico com Matplotlib mostrando a carga movimentada pelo porto selecionado**
     st.markdown(f"<h2 style='color: #002060;'>Resumo da Movimentação do Porto {porto_escolhido} por Ano</h2>", unsafe_allow_html=True)
