@@ -32,7 +32,7 @@ dados_porto = dados[dados['porto'] == porto_escolhido]
 if not dados_porto.empty:
     st.markdown(f"<h2 style='color: #002060;'>Movimentação para o Porto: {porto_escolhido}</h2>", unsafe_allow_html=True)
 
-    # Agrupar por 'Ano' e somar a coluna 'carga' para o porto escolhido
+    # Agrupar por 'Ano' e somar a carga do porto selecionado
     dados_anos = dados_porto.groupby('Ano')['carga'].sum().reset_index()
     
     # Agrupar por 'Ano' para calcular a movimentação total
@@ -42,17 +42,26 @@ if not dados_porto.empty:
     dados_anos = dados_anos.merge(dados_totais, on='Ano', suffixes=('_porto', '_total'))
     dados_anos['percentual'] = (dados_anos['carga_porto'] / dados_anos['carga_total']) * 100
 
-    # Exibir DataFrame com percentual
+    # Formatar os números para o padrão brasileiro
+    dados_anos['carga_porto'] = dados_anos['carga_porto'].map(lambda x: f"{x:,.2f}".replace(",", "X").replace(".", ",").replace("X", "."))
+    dados_anos['carga_total'] = dados_anos['carga_total'].map(lambda x: f"{x:,.2f}".replace(",", "X").replace(".", ",").replace("X", "."))
+    dados_anos['percentual'] = dados_anos['percentual'].map(lambda x: f"{x:.2f}".replace(".", ",")) + "%"
+
+    # Exibir DataFrame formatado
     st.dataframe(dados_anos[['Ano', 'carga_porto', 'carga_total', 'percentual']], use_container_width=True)
 
-    # Criar gráfico com Matplotlib
-    st.markdown("<h2 style='color: #002060;'>Resumo da Movimentação Total por Ano</h2>", unsafe_allow_html=True)
+    # Criar gráfico com Matplotlib mostrando a carga movimentada pelo porto selecionado
+    st.markdown(f"<h2 style='color: #002060;'>Resumo da Movimentação do Porto {porto_escolhido} por Ano</h2>", unsafe_allow_html=True)
 
     fig, ax = plt.subplots(figsize=(8, 5))
-    ax.bar(dados_totais['Ano'], dados_totais['carga'], color='#002060')
+    ax.bar(dados_anos['Ano'], dados_anos['carga_porto'].str.replace(".", "").str.replace(",", "."), color='#002060')
     ax.set_ylabel("Carga Movimentada")
     ax.set_xlabel("Ano")
-    ax.set_title("Movimentação Portuária Total (2020-2023)")
+    ax.set_title(f"Movimentação do Porto {porto_escolhido} (2020-2023)")
+    
+    # Formatar eixo Y no padrão brasileiro
+    ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"{x:,.0f}".replace(",", "X").replace(".", ",").replace("X", ".")))
+
     st.pyplot(fig)
 
 else:
@@ -61,3 +70,4 @@ else:
 # Adicionar a fonte e o crédito ao final da aplicação
 st.write("Fonte: Estatístico Aquaviário ANTAQ. Dados obtidos em nov/24.")
 st.markdown("<p><strong>Ferramenta desenvolvida por Darliane Cunha.</strong></p>", unsafe_allow_html=True)
+
